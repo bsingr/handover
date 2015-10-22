@@ -11,40 +11,26 @@ var d = Discover();
 var appIcon = null;
 var mainWindow = null;
 
+var lastReceive = null;
+
 d.join("clipboard", function(msg){
-  clipboard.writeText(msg.payload)
+  lastReceive = msg.payload;
 });
 
 function send() {
-  console.log('x)');
   var success = d.send("clipboard", { payload : clipboard.readText() });
 }
 
 function receive() {
-  function paste() {
-    mainWindow.webContents.send('message', clipboard.readText());
-  }
-
-  if (!mainWindow) {
-    mainWindow = new BrowserWindow({
-      width: 600,
-      height: 400,
-      frame: false,
-      'title-bar-style': 'hidden'
-    });
-    mainWindow.loadUrl('file://'+__dirname+'/resources/index.html');
-    mainWindow.webContents.on('dom-ready', paste);
-  } else {
-    paste();
-  }
+  clipboard.writeText(lastReceive);
 }
 
 app.on('ready', function(){
   appIcon = new Tray(__dirname + '/resources/icon.png');
   appIcon.setToolTip('Handover');
 
-  globalShortcut.register('ctrl+shift+c', send);
-  globalShortcut.register('ctrl+shift+v', receive);
+  globalShortcut.register('CmdOrCtrl+shift+c', send);
+  globalShortcut.register('CmdOrCtrl+shift+v', receive);
 });
 
 app.on('will-quit', function() {
