@@ -13,8 +13,6 @@ var iconActive = NativeImage.createFromPath(__dirname + '/resources/iconActive.p
 var d = Discover();
 
 var appIcon = null;
-var mainWindow = null;
-
 var lastReceive = null;
 
 d.join("clipboard", function(msg){
@@ -32,14 +30,12 @@ function receive() {
 }
 
 app.on('ready', function(){
-  appIcon = new Tray(__dirname + '/resources/icon.png');
+  appIcon = new Tray(icon);
   appIcon.setToolTip('Handover');
-
   globalShortcut.register('CmdOrCtrl+shift+c', send);
   globalShortcut.register('CmdOrCtrl+shift+v', receive);
 });
 
 app.on('will-quit', function() {
-  // Unregister a shortcut.
   globalShortcut.unregisterAll();
 });
