@@ -5,6 +5,10 @@ var clipboard = require('clipboard');
 var BrowserWindow = require('browser-window');
 var globalShortcut = require('global-shortcut');
 var Discover = require('node-discover');
+var NativeImage = require('native-image');
+
+var icon = NativeImage.createFromPath(__dirname + '/resources/icon.png');
+var iconActive = NativeImage.createFromPath(__dirname + '/resources/iconActive.png');
 
 var d = Discover();
 
@@ -14,6 +18,7 @@ var mainWindow = null;
 var lastReceive = null;
 
 d.join("clipboard", function(msg){
+  appIcon.setImage(iconActive);
   lastReceive = msg.payload;
 });
 
@@ -23,6 +28,7 @@ function send() {
 
 function receive() {
   clipboard.writeText(lastReceive);
+  appIcon.setImage(icon);
 }
 
 app.on('ready', function(){
