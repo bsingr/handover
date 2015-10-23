@@ -2,7 +2,6 @@ var app = require('app');
 var Menu = require('menu');
 var Tray = require('tray');
 var clipboard = require('clipboard');
-var BrowserWindow = require('browser-window');
 var globalShortcut = require('global-shortcut');
 var Discover = require('node-discover');
 var NativeImage = require('native-image');
