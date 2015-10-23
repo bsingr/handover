@@ -12,7 +12,11 @@ var path = require('path');
 var mime = require('mime');
 
 var icon = NativeImage.createFromPath(__dirname + '/resources/icon.png');
-var iconActive = NativeImage.createFromPath(__dirname + '/resources/iconActive.png');
+var dropIcons = {
+  'any': NativeImage.createFromPath(__dirname + '/resources/icon-drop-any.png'),
+  'image': NativeImage.createFromPath(__dirname + '/resources/icon-drop-image.png'),
+  'text': NativeImage.createFromPath(__dirname + '/resources/icon-drop-text.png')
+};
 
 var d = Discover();
 
@@ -20,11 +24,19 @@ var appIcon = null;
 var lastReceive = null;
 
 function receiveData(data) {
-  appIcon.setImage(iconActive);
+  appIcon.setImage(dropIcons[resolveDropIconName(data)]);
   lastReceive = data;
 }
 
-d.join("clipboard", receiveData);
+function resolveDropIconName(data) {
+  if (data.type === 'text') {
+    return 'text';
+  } else if (data.mime.match(/image/)) {
+    return 'image';
+  } else {
+    return 'any';
+  }
+}
 
 function send() {
   var success = d.send("clipboard", { payload : clipboard.readText(), type: 'text' });
@@ -54,6 +66,8 @@ function receive(data) {
     });
   }
 }
+
+d.join("clipboard", receiveData);
 
 app.dock.hide();
 app.on('ready', function(){
