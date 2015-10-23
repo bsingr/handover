@@ -55,6 +55,7 @@ function receive(data) {
   }
 }
 
+app.dock.hide();
 app.on('ready', function(){
   appIcon = new Tray(icon);
   appIcon.setToolTip('Handover');
