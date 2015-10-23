@@ -35,23 +35,19 @@ function sendFiles(paths) {
   var mimeType = mime.lookup(path);
   var encoded = yenc.encodeBytes(fs.readFileSync(path));
   var data = { payload: encoded, type: 'file', encoding: 'yenc', mime: mimeType };
-  receiveData(data);
   var success = d.send("clipboard", data);
 }
 
-function receive() {
-  if (!lastReceive) {
-    return;
-  }
+function receive(data) {
   appIcon.setImage(icon);
-  if (lastReceive.type === 'text') {
-    clipboard.writeText(lastReceive);
+  if (data.type === 'text') {
+    clipboard.writeText(data);
   } else {
     dialog.showSaveDialog({
-      title: 'Choose location to store the .' + mime.extension(lastReceive.mime) + ' file'
+      title: 'Choose location to store the .' + mime.extension(data.mime) + ' file'
     }, function(path){
       if (path) {
-        var decoded = yenc.decodeBytes(lastReceive.payload);
+        var decoded = yenc.decodeBytes(data.payload);
         var buffer = new Buffer(decoded);
         fs.writeFileSync(path, buffer);
       }
@@ -66,7 +62,11 @@ app.on('ready', function(){
     sendFiles(files);
   });
   globalShortcut.register('CmdOrCtrl+shift+c', send);
-  globalShortcut.register('CmdOrCtrl+shift+v', receive);
+  globalShortcut.register('CmdOrCtrl+shift+v', function(){
+    if (lastReceive) {
+      receive(lastReceive);
+    }
+  });
 });
 
 app.on('will-quit', function() {
