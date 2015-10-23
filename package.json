@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "mime": "^1.3.4",
     "node-discover": "^0.3.0",
     "yenc": "git://github.com/bsingr/Yenc"
   }

@@ -8,6 +8,8 @@ var NativeImage = require('native-image');
 var fs = require('fs');
 var yenc = require('yenc');
 var dialog = require('dialog');
+var path = require('path');
+var mime = require('mime');
 
 var icon = NativeImage.createFromPath(__dirname + '/resources/icon.png');
 var iconActive = NativeImage.createFromPath(__dirname + '/resources/iconActive.png');
@@ -30,8 +32,9 @@ function send() {
 
 function sendFiles(paths) {
   var path = paths[0];
+  var mimeType = mime.lookup(path);
   var encoded = yenc.encodeBytes(fs.readFileSync(path));
-  var data = { payload: encoded, type: 'file', encoding: 'yenc' };
+  var data = { payload: encoded, type: 'file', encoding: 'yenc', mime: mimeType };
   receiveData(data);
   var success = d.send("clipboard", data);
 }
@@ -44,7 +47,9 @@ function receive() {
   if (lastReceive.type === 'text') {
     clipboard.writeText(lastReceive);
   } else {
-    dialog.showSaveDialog(function(path){
+    dialog.showSaveDialog({
+      title: 'Choose location to store the ' + lastReceive.mime + ' file'
+    }, function(path){
       if (path) {
         var decoded = yenc.decodeBytes(lastReceive.payload);
         var buffer = new Buffer(decoded);
