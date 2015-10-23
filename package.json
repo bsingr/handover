@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "adm-zip": "^0.4.7",
     "node-discover": "^0.3.0",
     "yenc": "git://github.com/bsingr/Yenc"
   }
