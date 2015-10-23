@@ -48,7 +48,7 @@ function receive() {
     clipboard.writeText(lastReceive);
   } else {
     dialog.showSaveDialog({
-      title: 'Choose location to store the ' + lastReceive.mime + ' file'
+      title: 'Choose location to store the .' + mime.extension(lastReceive.mime) + ' file'
     }, function(path){
       if (path) {
         var decoded = yenc.decodeBytes(lastReceive.payload);
