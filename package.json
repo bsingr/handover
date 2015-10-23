@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-discover": "^0.3.0"
+    "mime": "^1.3.4",
+    "node-discover": "^0.3.0",
+    "yenc": "git://github.com/bsingr/Yenc"
   },
   "devDependencies": {
     "electron-packager": "^5.1.0"
