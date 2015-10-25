@@ -14,6 +14,7 @@ import mime from 'mime'
 import request from 'superagent'
 import koa from 'koa'
 import http from 'http'
+import { resolveDropIcon } from './src/icon'
 
 var icon = NativeImage.createFromPath(__dirname + '/resources/icon.png')
 var dropIcons = {
@@ -31,20 +32,10 @@ var lastReceive = null
 var lastSend = {}
 
 function receiveNotice(data, obj) {
-  appIcon.setImage(dropIcons[resolveDropIconName(data)])
+  appIcon.setImage(dropIcons[resolveDropIcon(data)])
   lastReceive = {
     data: data,
     obj: obj
-  }
-}
-
-function resolveDropIconName(data) {
-  if (data.mime.match(/text/)) {
-    return 'text'
-  } else if (data.mime.match(/image/)) {
-    return 'image'
-  } else {
-    return 'any'
   }
 }
 
