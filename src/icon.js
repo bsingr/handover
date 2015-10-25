@@ -10,16 +10,22 @@ const dropIcons = {
   'text': NativeImage.createFromPath(__dirname + '/../resources/icon-drop-text.png')
 }
 
-function resolveDropIconName(data) {
-  if (data.mime.match(/text/)) {
-    return 'text'
-  } else if (data.mime.match(/image/)) {
-    return 'image'
-  } else {
-    return 'any'
+export default class Icon {
+  defaultIcon() {
+    return icon
   }
-}
 
-export function dropIcon(data) {
-  return dropIcons(resolveDropIconName(data))
+  dropIcon(data) {
+    return dropIcons[dropIconName(data)]
+  }
+
+  dropIconName(data) {
+    if (data.mime.match(/text/)) {
+      return 'text'
+    } else if (data.mime.match(/image/)) {
+      return 'image'
+    } else {
+      return 'any'
+    }
+  }
 }

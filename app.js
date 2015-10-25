@@ -11,9 +11,11 @@ import dialog from 'dialog'
 import path from 'path'
 import mime from 'mime'
 import http from 'http'
-import { icon, dropIcon } from './src/icon'
+import Icon from './src/icon'
 import buildWebApp from './src/build_web_app'
 import fetchData from './src/fetch_data'
+
+var icon = new Icon()
 
 var d = Discover()
 
@@ -32,7 +34,7 @@ function receive(notice) {
   d.eachNode((node) => {
     if (node.id === notice.obj.iid) {
       fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
-        appIcon.setImage(icon)
+        appIcon.setImage(icon.defaultIcon())
         if (notice.data.mime.match(/text\/plain/)) {
           clipboard.writeText(dataText)
         } else {
@@ -50,7 +52,7 @@ function receive(notice) {
 }
 
 d.join("clipboard", function(data, obj){
-  appIcon.setImage(dropIcon(data))
+  appIcon.setImage(icon.dropIcon(data))
   lastReceive = {
     data: data,
     obj: obj
@@ -60,7 +62,7 @@ d.join("clipboard", function(data, obj){
 app.dock ? app.dock.hide() : false // disable dock icon on OS X
 
 app.on('ready', function(){
-  appIcon = new Tray(icon)
+  appIcon = new Tray(icon.defaultIcon())
   appIcon.setToolTip('Handover')
   appIcon.on('drop-files', function(e, paths){
     var firstPath = paths[0]
