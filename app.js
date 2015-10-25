@@ -6,7 +6,6 @@ import Tray from 'tray'
 import clipboard from 'clipboard'
 import globalShortcut from 'global-shortcut'
 import Discover from 'node-discover'
-import NativeImage from 'native-image'
 import fs from 'fs'
 import dialog from 'dialog'
 import path from 'path'
@@ -14,14 +13,7 @@ import mime from 'mime'
 import request from 'superagent'
 import koa from 'koa'
 import http from 'http'
-import { resolveDropIcon } from './src/icon'
-
-var icon = NativeImage.createFromPath(__dirname + '/resources/icon.png')
-var dropIcons = {
-  'any': NativeImage.createFromPath(__dirname + '/resources/icon-drop-any.png'),
-  'image': NativeImage.createFromPath(__dirname + '/resources/icon-drop-image.png'),
-  'text': NativeImage.createFromPath(__dirname + '/resources/icon-drop-text.png')
-}
+import { icon, dropIcon } from './src/icon'
 
 var d = Discover()
 
@@ -32,7 +24,7 @@ var lastReceive = null
 var lastSend = {}
 
 function receiveNotice(data, obj) {
-  appIcon.setImage(dropIcons[resolveDropIcon(data)])
+  appIcon.setImage(dropIcon(data))
   lastReceive = {
     data: data,
     obj: obj
