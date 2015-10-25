@@ -3,7 +3,7 @@
 import fs from 'fs'
 import koa from 'koa'
 
-export function buildWebApp(lastSend) {
+export default function (lastSend) {
   var webApp = koa()
 
   webApp.use(function *(){

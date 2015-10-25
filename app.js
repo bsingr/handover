@@ -12,7 +12,7 @@ import path from 'path'
 import mime from 'mime'
 import http from 'http'
 import { icon, dropIcon } from './src/icon'
-import { buildWebApp } from './src/web_app'
+import buildWebApp from './src/build_web_app'
 import fetchData from './src/fetch_data'
 
 var d = Discover()
