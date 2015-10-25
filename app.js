@@ -10,10 +10,10 @@ import fs from 'fs'
 import dialog from 'dialog'
 import path from 'path'
 import mime from 'mime'
-import request from 'superagent'
 import http from 'http'
 import { icon, dropIcon } from './src/icon'
 import { buildWebApp } from './src/web_app'
+import fetchData from './src/fetch_data'
 
 var d = Discover()
 
@@ -31,26 +31,20 @@ function publish(data) {
 function receive(notice) {
   d.eachNode((node) => {
     if (node.id === notice.obj.iid) {
-      request('http://'+node.address+':'+notice.data.httpPort)
-        .send()
-        .end(function(err, res){
-          if (err) {
-            console.log('Err', err)
-            return
-          }
-          appIcon.setImage(icon)
-          if (notice.data.mime.match(/text\/plain/)) {
-            clipboard.writeText(res.text)
-          } else {
-            dialog.showSaveDialog({
-              title: 'Choose location to store the .' + mime.extension(notice.data.mime) + ' file'
-            }, function(destinationPath){
-              if (destinationPath) {
-                fs.writeFileSync(destinationPath, res.body)
-              }
-            })
-          }
-        })
+      fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
+        appIcon.setImage(icon)
+        if (notice.data.mime.match(/text\/plain/)) {
+          clipboard.writeText(dataText)
+        } else {
+          dialog.showSaveDialog({
+            title: 'Choose location to store the .' + mime.extension(notice.data.mime) + ' file'
+          }, function(destinationPath){
+            if (destinationPath) {
+              fs.writeFileSync(destinationPath, dataBytes)
+            }
+          })
+        }
+      })
     }
   })
 }
