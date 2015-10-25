@@ -99,7 +99,8 @@ function receive(notice) {
 
 d.join("clipboard", receiveNotice);
 
-app.dock.hide();
+app.dock ? app.dock.hide() : false; // disable dock icon on OS X
+
 app.on('ready', function(){
   appIcon = new Tray(icon);
   appIcon.setToolTip('Handover');
