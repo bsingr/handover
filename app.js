@@ -11,9 +11,9 @@ import dialog from 'dialog'
 import path from 'path'
 import mime from 'mime'
 import request from 'superagent'
-import koa from 'koa'
 import http from 'http'
 import { icon, dropIcon } from './src/icon'
+import { buildWebApp } from './src/web_app'
 
 var d = Discover()
 
@@ -32,8 +32,8 @@ function receiveNotice(data, obj) {
 }
 
 function sendData(data) {
-  lastSend = data
-  var success = d.send("clipboard", lastSend)
+  lastSend.data = data
+  var success = d.send("clipboard", lastSend.data)
 }
 
 function sendText() {
@@ -103,23 +103,7 @@ app.on('will-quit', function() {
   globalShortcut.unregisterAll()
 })
 
-var webApp = koa()
-webApp.use(function *(){
-  if (!lastSend) {
-    this.status = 404
-    return
-  }
-  this.type = lastSend.mime
-  if (lastSend.payload) {
-    this.body = lastSend.payload
-  } else if (lastSend.path) {
-    this.body = fs.createReadStream(lastSend.path)
-  }
-  if (lastSend.path && !lastSend.mime.match(/(text|json|xml|gif|png|jpg)/)) {
-    this.attachment(path.basename(lastSend.path))
-  }
-})
-var httpServer = http.createServer(webApp.callback())
+var httpServer = http.createServer(buildWebApp(lastSend).callback())
 httpServer.listen(0) // random
 httpServer.on('listening', function() {
   httpPort = httpServer.address().port
