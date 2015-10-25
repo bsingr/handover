@@ -23,35 +23,9 @@ var httpPort = null
 var lastReceive = null
 var lastSend = {}
 
-function receiveNotice(data, obj) {
-  appIcon.setImage(dropIcon(data))
-  lastReceive = {
-    data: data,
-    obj: obj
-  }
-}
-
-function sendData(data) {
+function publish(data) {
   lastSend.data = data
   var success = d.send("clipboard", lastSend.data)
-}
-
-function sendText() {
-  sendData({
-    payload: clipboard.readText(),
-    mime: 'text/plain',
-    httpPort: httpPort
-  })
-}
-
-function sendFiles(paths) {
-  var firstPath = paths[0]
-  var mimeType = mime.lookup(firstPath)
-  sendData({
-    mime: mimeType,
-    path: firstPath,
-    httpPort: httpPort
-  })
 }
 
 function receive(notice) {
@@ -81,18 +55,36 @@ function receive(notice) {
   })
 }
 
-d.join("clipboard", receiveNotice)
+d.join("clipboard", function(data, obj){
+  appIcon.setImage(dropIcon(data))
+  lastReceive = {
+    data: data,
+    obj: obj
+  }
+})
 
 app.dock ? app.dock.hide() : false // disable dock icon on OS X
 
 app.on('ready', function(){
   appIcon = new Tray(icon)
   appIcon.setToolTip('Handover')
-  appIcon.on('drop-files', function(e, files){
-    sendFiles(files)
+  appIcon.on('drop-files', function(e, paths){
+    var firstPath = paths[0]
+    var mimeType = mime.lookup(firstPath)
+    publish({
+      mime: mimeType,
+      path: firstPath,
+      httpPort: httpPort
+    })
   })
-  globalShortcut.register('CmdOrCtrl+shift+c', sendText)
-  globalShortcut.register('CmdOrCtrl+shift+v', function(){
+  globalShortcut.register('CmdOrCtrl+shift+c', () => {
+    publish({
+      payload: clipboard.readText(),
+      mime: 'text/plain',
+      httpPort: httpPort
+    })
+  })
+  globalShortcut.register('CmdOrCtrl+shift+v', () => {
     if (lastReceive) {
       receive(lastReceive)
     }
