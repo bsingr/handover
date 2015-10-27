@@ -16,7 +16,7 @@ export default class Icon {
   }
 
   dropIcon(data) {
-    return dropIcons[dropIconName(data)]
+    return dropIcons[this.dropIconName(data)]
   }
 
   dropIconName(data) {
