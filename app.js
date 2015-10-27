@@ -32,7 +32,7 @@ class Consumer extends EventEmitter {
   }
 }
 
-class Paster extends EventEmitter {
+class Client extends EventEmitter {
   constructor(discover, consumer) {
     super()
     this.discover = discover
@@ -56,7 +56,7 @@ class Paster extends EventEmitter {
     }
   }
 
-  paste() {
+  fetch() {
     var that = this
     var notice = this.consumer.last
     var node = this.lastNode()
@@ -94,14 +94,11 @@ consumer.on('consume', () => {
   appIcon.setImage(icon.dropIcon(consumer.last.data.payload.mime))
 })
 
-var paster = new Paster(d, consumer)
-paster.on('pasteText', (text) => {
-  console.log(text);
+var client = new Client(d, consumer)
+client.on('text', (text) => {
   clipboard.writeText(text)
 })
-
-paster.on('pasteFile', (mimeType, path, dataBytes) => {
-  console.log(mimeType);
+client.on('file', (mimeType, path, dataBytes) => {
   dialog.showSaveDialog({
     title: 'Choose location to store the .' + mime.extension(mimeType) + ' file'
   }, function(destinationPath){
@@ -130,7 +127,7 @@ app.on('ready', function(){
     publisher.publish(new TextPayload(clipboard.readText()))
   })
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
-    paster.paste()
+    client.fetch()
   })
 })
 
