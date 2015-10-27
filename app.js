@@ -13,10 +13,10 @@ import mime from 'mime'
 import http from 'http'
 import Icon from './src/icon'
 import buildWebApp from './src/build_web_app'
-import fetchData from './src/fetch_data'
 import EventEmitter from 'events'
 import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
+import Client from './src/client'
 
 class Publisher extends EventEmitter  {
   publish(payload) {
@@ -29,48 +29,6 @@ class Consumer extends EventEmitter {
   consume(payload) {
     this.last = payload
     this.emit('consume')
-  }
-}
-
-class Client extends EventEmitter {
-  constructor(discover, consumer) {
-    super()
-    this.discover = discover
-    this.consumer = consumer
-  }
-
-  findNodeById(id) {
-    var node;
-    d.eachNode((n) => {
-      if (n.id === id) {
-        node = n
-      }
-    })
-    return node
-  }
-
-  lastNode() {
-    var last = this.consumer.last
-    if (last) {
-      return this.findNodeById(last.obj.iid)
-    }
-  }
-
-  fetch() {
-    var that = this
-    var notice = this.consumer.last
-    var node = this.lastNode()
-    if (notice && node) {
-      fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
-        appIcon.setImage(icon.defaultIcon())
-        var mimeType = notice.data.payload.mime
-        if (mimeType === 'text/plain') {
-          that.emit('pasteText', dataText);
-        } else {
-          that.emit('pasteFile', mimeType, notice.data.payload.path, dataBytes)
-        }
-      })
-    }
   }
 }
 
@@ -95,10 +53,13 @@ consumer.on('consume', () => {
 })
 
 var client = new Client(d, consumer)
-client.on('text', (text) => {
+client.on('fetch', () => {
+  appIcon.setImage(icon.defaultIcon())
+})
+client.on('fetchText', (text) => {
   clipboard.writeText(text)
 })
-client.on('file', (mimeType, path, dataBytes) => {
+client.on('fetchFile', (mimeType, path, dataBytes) => {
   dialog.showSaveDialog({
     title: 'Choose location to store the .' + mime.extension(mimeType) + ' file'
   }, function(destinationPath){
