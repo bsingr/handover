@@ -25,6 +25,13 @@ class Publisher extends EventEmitter  {
   }
 }
 
+class Consumer extends EventEmitter {
+  consume(payload) {
+    this.last = payload
+    this.emit('consume')
+  }
+}
+
 var icon = new Icon()
 
 var d = Discover()
@@ -32,14 +39,17 @@ var d = Discover()
 var appIcon = null
 var httpPort = null
 
-var lastReceive = null
-
 var publisher = new Publisher()
 publisher.on('publish', () => {
   var success = d.send('clipboard', {
     httpPort: httpPort,
     payload: publisher.last.serialize()
   })
+})
+
+var consumer = new Consumer()
+consumer.on('consume', () => {
+  appIcon.setImage(icon.dropIcon(consumer.last.data.payload.mime))
 })
 
 function receive(notice) {
@@ -65,11 +75,10 @@ function receive(notice) {
 }
 
 d.join("clipboard", function(data, obj){
-  appIcon.setImage(icon.dropIcon(data.payload.mime))
-  lastReceive = {
+  consumer.consume({
     data: data,
     obj: obj
-  }
+  })
 })
 
 app.dock ? app.dock.hide() : false // disable dock icon on OS X
@@ -84,8 +93,8 @@ app.on('ready', function(){
     publisher.publish(new TextPayload(clipboard.readText()))
   })
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
-    if (lastReceive) {
-      receive(lastReceive)
+    if (consumer.last) {
+      receive(consumer.last)
     }
   })
 })
