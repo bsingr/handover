@@ -15,17 +15,18 @@ export default class Icon {
     return icon
   }
 
-  dropIcon(data) {
-    return dropIcons[this.dropIconName(data)]
+  dropIcon(mime) {
+    return dropIcons[this.dropIconName(mime)]
   }
 
-  dropIconName(data) {
-    if (data.mime.match(/text/)) {
-      return 'text'
-    } else if (data.mime.match(/image/)) {
-      return 'image'
-    } else {
-      return 'any'
+  dropIconName(mime) {
+    if (mime) {
+      if (mime.match(/text/)) {
+        return 'text'
+      } else if (mime.match(/image/)) {
+        return 'image'
+      }
     }
+    return 'any'
   }
 }

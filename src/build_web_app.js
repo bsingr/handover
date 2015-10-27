@@ -3,24 +3,20 @@
 import fs from 'fs'
 import koa from 'koa'
 
-export default function (lastSend) {
+export default function (publisher) {
   var webApp = koa()
 
   webApp.use(function *(){
-    var data = lastSend.data
+    var payload = publisher.last
 
-    if (!data) {
+    if (!payload) {
       this.status = 404
       return
     }
-    this.type = data.mime
-    if (data.payload) {
-      this.body = data.payload
-    } else if (data.path) {
-      this.body = fs.createReadStream(data.path)
-    }
-    if (data.path && !data.mime.match(/(text|json|xml|gif|png|jpg)/)) {
-      this.attachment(path.basename(data.path))
+    this.type = payload.mime()
+    this.body = payload.data()
+    if (payload.path && !payload.mime().match(/(text|json|xml|gif|png|jpg)/)) {
+      this.attachment(path.basename(payload.path))
     }
   })
 

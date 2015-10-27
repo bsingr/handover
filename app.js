@@ -14,6 +14,16 @@ import http from 'http'
 import Icon from './src/icon'
 import buildWebApp from './src/build_web_app'
 import fetchData from './src/fetch_data'
+import EventEmitter from 'events'
+import TextPayload from './src/text_payload'
+import FilePayload from './src/file_payload'
+
+class Publisher extends EventEmitter  {
+  publish(payload) {
+    this.last = payload
+    this.emit('publish')
+  }
+}
 
 var icon = new Icon()
 
@@ -23,23 +33,26 @@ var appIcon = null
 var httpPort = null
 
 var lastReceive = null
-var lastSend = {}
 
-function publish(data) {
-  lastSend.data = data
-  var success = d.send("clipboard", lastSend.data)
-}
+var publisher = new Publisher()
+publisher.on('publish', () => {
+  var success = d.send('clipboard', {
+    httpPort: httpPort,
+    payload: publisher.last.serialize()
+  })
+})
 
 function receive(notice) {
   d.eachNode((node) => {
     if (node.id === notice.obj.iid) {
       fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
         appIcon.setImage(icon.defaultIcon())
-        if (notice.data.mime.match(/text\/plain/)) {
+        var mime = notice.data.payload.mime
+        if (mime === 'text/plain') {
           clipboard.writeText(dataText)
         } else {
           dialog.showSaveDialog({
-            title: 'Choose location to store the .' + mime.extension(notice.data.mime) + ' file'
+            title: 'Choose location to store the .' + mime.extension(mime) + ' file'
           }, function(destinationPath){
             if (destinationPath) {
               fs.writeFileSync(destinationPath, dataBytes)
@@ -52,7 +65,7 @@ function receive(notice) {
 }
 
 d.join("clipboard", function(data, obj){
-  appIcon.setImage(icon.dropIcon(data))
+  appIcon.setImage(icon.dropIcon(data.payload.mime))
   lastReceive = {
     data: data,
     obj: obj
@@ -65,20 +78,10 @@ app.on('ready', function(){
   appIcon = new Tray(icon.defaultIcon())
   appIcon.setToolTip('Handover')
   appIcon.on('drop-files', function(e, paths){
-    var firstPath = paths[0]
-    var mimeType = mime.lookup(firstPath)
-    publish({
-      mime: mimeType,
-      path: firstPath,
-      httpPort: httpPort
-    })
+    publisher.publish(new FilePayload(paths[0]))
   })
   globalShortcut.register('CmdOrCtrl+shift+c', () => {
-    publish({
-      payload: clipboard.readText(),
-      mime: 'text/plain',
-      httpPort: httpPort
-    })
+    publisher.publish(new TextPayload(clipboard.readText()))
   })
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
     if (lastReceive) {
@@ -91,7 +94,7 @@ app.on('will-quit', function() {
   globalShortcut.unregisterAll()
 })
 
-var httpServer = http.createServer(buildWebApp(lastSend).callback())
+var httpServer = http.createServer(buildWebApp(publisher).callback())
 httpServer.listen(0) // random
 httpServer.on('listening', function() {
   httpPort = httpServer.address().port
