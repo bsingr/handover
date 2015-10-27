@@ -18,17 +18,10 @@ import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
 import Client from './src/client'
 
-class Publisher extends EventEmitter  {
-  publish(payload) {
+class Stack extends EventEmitter  {
+  push(item) {
     this.last = payload
-    this.emit('publish')
-  }
-}
-
-class Consumer extends EventEmitter {
-  consume(payload) {
-    this.last = payload
-    this.emit('consume')
+    this.emit('update')
   }
 }
 
@@ -39,16 +32,16 @@ var d = Discover()
 var appIcon = null
 var httpPort = null
 
-var publisher = new Publisher()
-publisher.on('publish', () => {
+var publisher = new Stack()
+publisher.on('update', () => {
   var success = d.send('clipboard', {
     httpPort: httpPort,
     payload: publisher.last.serialize()
   })
 })
 
-var consumer = new Consumer()
-consumer.on('consume', () => {
+var consumer = new Stack()
+consumer.on('update', () => {
   appIcon.setImage(icon.dropIcon(consumer.last.data.payload.mime))
 })
 
