@@ -32,6 +32,48 @@ class Consumer extends EventEmitter {
   }
 }
 
+class Paster extends EventEmitter {
+  constructor(discover, consumer) {
+    super()
+    this.discover = discover
+    this.consumer = consumer
+  }
+
+  findNodeById(id) {
+    var node;
+    d.eachNode((n) => {
+      if (n.id === id) {
+        node = n
+      }
+    })
+    return node
+  }
+
+  lastNode() {
+    var last = this.consumer.last
+    if (last) {
+      return this.findNodeById(last.obj.iid)
+    }
+  }
+
+  paste() {
+    var that = this
+    var notice = this.consumer.last
+    var node = this.lastNode()
+    if (notice && node) {
+      fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
+        appIcon.setImage(icon.defaultIcon())
+        var mimeType = notice.data.payload.mime
+        if (mimeType === 'text/plain') {
+          that.emit('pasteText', dataText);
+        } else {
+          that.emit('pasteFile', mimeType, notice.data.payload.path, dataBytes)
+        }
+      })
+    }
+  }
+}
+
 var icon = new Icon()
 
 var d = Discover()
@@ -52,34 +94,22 @@ consumer.on('consume', () => {
   appIcon.setImage(icon.dropIcon(consumer.last.data.payload.mime))
 })
 
-function findNodeById(id) {
-  d.eachNode((node) => {
-    if (node.id === id) {
-      return node
+var paster = new Paster(d, consumer)
+paster.on('pasteText', (text) => {
+  console.log(text);
+  clipboard.writeText(text)
+})
+
+paster.on('pasteFile', (mimeType, path, dataBytes) => {
+  console.log(mimeType);
+  dialog.showSaveDialog({
+    title: 'Choose location to store the .' + mime.extension(mimeType) + ' file'
+  }, function(destinationPath){
+    if (destinationPath) {
+      fs.writeFileSync(destinationPath, dataBytes)
     }
   })
-}
-
-function receive(notice) {
-  var node = findNode(notice.obj.iid)
-  if (node) {
-    fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
-      appIcon.setImage(icon.defaultIcon())
-      var mime = notice.data.payload.mime
-      if (mime === 'text/plain') {
-        clipboard.writeText(dataText)
-      } else {
-        dialog.showSaveDialog({
-          title: 'Choose location to store the .' + mime.extension(mime) + ' file'
-        }, function(destinationPath){
-          if (destinationPath) {
-            fs.writeFileSync(destinationPath, dataBytes)
-          }
-        })
-      }
-    })
-  }
-}
+})
 
 d.join("clipboard", function(data, obj){
   consumer.consume({
@@ -100,9 +130,7 @@ app.on('ready', function(){
     publisher.publish(new TextPayload(clipboard.readText()))
   })
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
-    if (consumer.last) {
-      receive(consumer.last)
-    }
+    paster.paste()
   })
 })
 
