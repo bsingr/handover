@@ -52,26 +52,33 @@ consumer.on('consume', () => {
   appIcon.setImage(icon.dropIcon(consumer.last.data.payload.mime))
 })
 
-function receive(notice) {
+function findNodeById(id) {
   d.eachNode((node) => {
-    if (node.id === notice.obj.iid) {
-      fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
-        appIcon.setImage(icon.defaultIcon())
-        var mime = notice.data.payload.mime
-        if (mime === 'text/plain') {
-          clipboard.writeText(dataText)
-        } else {
-          dialog.showSaveDialog({
-            title: 'Choose location to store the .' + mime.extension(mime) + ' file'
-          }, function(destinationPath){
-            if (destinationPath) {
-              fs.writeFileSync(destinationPath, dataBytes)
-            }
-          })
-        }
-      })
+    if (node.id === id) {
+      return node
     }
   })
+}
+
+function receive(notice) {
+  var node = findNode(notice.obj.iid)
+  if (node) {
+    fetchData(node.address, notice.data.httpPort, (dataText, dataBytes) => {
+      appIcon.setImage(icon.defaultIcon())
+      var mime = notice.data.payload.mime
+      if (mime === 'text/plain') {
+        clipboard.writeText(dataText)
+      } else {
+        dialog.showSaveDialog({
+          title: 'Choose location to store the .' + mime.extension(mime) + ' file'
+        }, function(destinationPath){
+          if (destinationPath) {
+            fs.writeFileSync(destinationPath, dataBytes)
+          }
+        })
+      }
+    })
+  }
 }
 
 d.join("clipboard", function(data, obj){
