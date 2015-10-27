@@ -11,21 +11,28 @@ import dialog from 'dialog'
 import path from 'path'
 import mime from 'mime'
 import http from 'http'
-import IconSet from './src/icon_set'
+import IconResolver from './src/icon_resolver'
 import buildWebApp from './src/build_web_app'
 import EventEmitter from 'events'
 import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
 import Client from './src/client'
+import NativeImage from 'native-image'
 
 class Stack extends EventEmitter  {
   push(item) {
-    this.last = payload
+    this.last = item
     this.emit('update')
   }
 }
 
-var iconSet = new IconSet()
+var iconSet = {
+  'ready': NativeImage.createFromPath(__dirname + '/resources/icon.png'),
+  'dropAny': NativeImage.createFromPath(__dirname + '/resources/icon-drop-any.png'),
+  'dropImage': NativeImage.createFromPath(__dirname + '/resources/icon-drop-image.png'),
+  'dropText': NativeImage.createFromPath(__dirname + '/resources/icon-drop-text.png')
+}
+var iconResolver = new IconResolver()
 
 var d = Discover()
 
@@ -42,12 +49,13 @@ publisher.on('update', () => {
 
 var consumer = new Stack()
 consumer.on('update', () => {
-  appIcon.setImage(iconSet.dropIcon(consumer.last.data.payload.mime))
+  var iconName = iconResolver.dropIconName(consumer.last.data.payload.mime)
+  appIcon.setImage(iconSet[iconName])
 })
 
 var client = new Client(d, consumer)
 client.on('fetch', () => {
-  appIcon.setImage(iconSet.defaultIcon())
+  appIcon.setImage(iconSet.ready)
 })
 client.on('fetchText', (text) => {
   clipboard.writeText(text)
@@ -63,7 +71,7 @@ client.on('fetchFile', (mimeType, path, dataBytes) => {
 })
 
 d.join("clipboard", function(data, obj){
-  consumer.consume({
+  consumer.push({
     data: data,
     obj: obj
   })
@@ -72,13 +80,13 @@ d.join("clipboard", function(data, obj){
 app.dock ? app.dock.hide() : false // disable dock icon on OS X
 
 app.on('ready', function(){
-  appIcon = new Tray(iconSet.defaultIcon())
+  appIcon = new Tray(iconSet.ready)
   appIcon.setToolTip('Handover')
   appIcon.on('drop-files', function(e, paths){
-    publisher.publish(new FilePayload(paths[0]))
+    publisher.push(new FilePayload(paths[0]))
   })
   globalShortcut.register('CmdOrCtrl+shift+c', () => {
-    publisher.publish(new TextPayload(clipboard.readText()))
+    publisher.push(new TextPayload(clipboard.readText()))
   })
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
     client.fetch()
