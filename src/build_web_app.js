@@ -2,6 +2,7 @@
 
 import fs from 'fs'
 import koa from 'koa'
+import path from 'path'
 
 export default function (publisher) {
   var webApp = koa()
