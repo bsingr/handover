@@ -10,7 +10,7 @@ const dropIcons = {
   'text': NativeImage.createFromPath(__dirname + '/../resources/icon-drop-text.png')
 }
 
-export default class Icon {
+export default class IconSet {
   defaultIcon() {
     return icon
   }

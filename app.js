@@ -11,7 +11,7 @@ import dialog from 'dialog'
 import path from 'path'
 import mime from 'mime'
 import http from 'http'
-import Icon from './src/icon'
+import IconSet from './src/icon_set'
 import buildWebApp from './src/build_web_app'
 import EventEmitter from 'events'
 import TextPayload from './src/text_payload'
@@ -25,7 +25,7 @@ class Stack extends EventEmitter  {
   }
 }
 
-var icon = new Icon()
+var iconSet = new IconSet()
 
 var d = Discover()
 
@@ -42,12 +42,12 @@ publisher.on('update', () => {
 
 var consumer = new Stack()
 consumer.on('update', () => {
-  appIcon.setImage(icon.dropIcon(consumer.last.data.payload.mime))
+  appIcon.setImage(iconSet.dropIcon(consumer.last.data.payload.mime))
 })
 
 var client = new Client(d, consumer)
 client.on('fetch', () => {
-  appIcon.setImage(icon.defaultIcon())
+  appIcon.setImage(iconSet.defaultIcon())
 })
 client.on('fetchText', (text) => {
   clipboard.writeText(text)
@@ -72,7 +72,7 @@ d.join("clipboard", function(data, obj){
 app.dock ? app.dock.hide() : false // disable dock icon on OS X
 
 app.on('ready', function(){
-  appIcon = new Tray(icon.defaultIcon())
+  appIcon = new Tray(iconSet.defaultIcon())
   appIcon.setToolTip('Handover')
   appIcon.on('drop-files', function(e, paths){
     publisher.publish(new FilePayload(paths[0]))
