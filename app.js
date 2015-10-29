@@ -18,13 +18,7 @@ import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
 import Client from './src/client'
 import NativeImage from 'native-image'
-
-class Stack extends EventEmitter  {
-  push(item) {
-    this.last = item
-    this.emit('update')
-  }
-}
+import Stack from './src/stack'
 
 var iconSet = {
   'ready': NativeImage.createFromPath(__dirname + '/resources/icon.png'),
