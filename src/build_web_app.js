@@ -9,7 +9,6 @@ export default function (publisher) {
 
   webApp.use(function *(){
     var payload = publisher.last
-
     if (!payload) {
       this.status = 404
       return
