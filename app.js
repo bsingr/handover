@@ -57,14 +57,14 @@ client.on('fetchText', (text) => {
 client.on('fetchFile', (mimeType, path, dataBytes) => {
   dialog.showSaveDialog({
     title: 'Choose location to store the .' + mime.extension(mimeType) + ' file'
-  }, function(destinationPath){
+  }, (destinationPath) => {
     if (destinationPath) {
       fs.writeFileSync(destinationPath, dataBytes)
     }
   })
 })
 
-d.join("clipboard", function(data, obj){
+d.join("clipboard", (data, obj) => {
   consumer.push({
     data: data,
     obj: obj
@@ -73,10 +73,10 @@ d.join("clipboard", function(data, obj){
 
 app.dock ? app.dock.hide() : false // disable dock icon on OS X
 
-app.on('ready', function(){
+app.on('ready', () => {
   appIcon = new Tray(iconSet.ready)
   appIcon.setToolTip('Handover')
-  appIcon.on('drop-files', function(e, paths){
+  appIcon.on('drop-files', (e, paths) => {
     publisher.push(new FilePayload(paths[0]))
   })
   globalShortcut.register('CmdOrCtrl+shift+c', () => {
@@ -87,13 +87,13 @@ app.on('ready', function(){
   })
 })
 
-app.on('will-quit', function() {
+app.on('will-quit', () =>  {
   globalShortcut.unregisterAll()
 })
 
 var httpServer = http.createServer(buildWebApp(publisher).callback())
 httpServer.listen(0) // random
-httpServer.on('listening', function() {
+httpServer.on('listening', () =>  {
   httpPort = httpServer.address().port
   console.log('listening http://127.0.0.1:'+httpPort)
 })
