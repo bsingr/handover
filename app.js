@@ -35,12 +35,10 @@ const discovery = new Discovery()
 discovery.on('receive', notice => consumer.push(notice))
 
 const publisher = new Stack()
-publisher.on('update', () => {
-  const success = discovery.send({
-    httpPort: httpPort,
-    payload: publisher.last.serialize()
-  })
-})
+publisher.on('update', () => discovery.send({
+  httpPort: httpPort,
+  payload: publisher.last.serialize()
+}))
 
 const client = new Client()
 client.on('fetch', () => appIcon.setImage(iconSet.ready))
