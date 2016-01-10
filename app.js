@@ -1,11 +1,7 @@
 'use babel'
 
-import app from 'app'
-import Tray from 'tray'
-import clipboard from 'clipboard'
-import globalShortcut from 'global-shortcut'
+import electron from 'electron'
 import fs from 'fs'
-import dialog from 'dialog'
 import path from 'path'
 import mime from 'mime'
 import http from 'http'
@@ -18,6 +14,8 @@ import Client from './src/client'
 import NativeImage from 'native-image'
 import Stack from './src/stack'
 import Discovery from './src/discovery'
+
+const {app, Tray, globalShortcut, dialog, clipboard} = electron;
 
 var iconSet = {
   'ready': NativeImage.createFromPath(__dirname + '/resources/icon.png'),
