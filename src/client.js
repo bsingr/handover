@@ -10,27 +10,10 @@ export default class Client extends EventEmitter {
     this.consumer = consumer
   }
 
-  findNodeById(id) {
-    var node;
-    this.discover.eachNode((n) => {
-      if (n.id === id) {
-        node = n
-      }
-    })
-    return node
-  }
-
-  lastNode() {
-    var last = this.consumer.last
-    if (last) {
-      return this.findNodeById(last.obj.iid)
-    }
-  }
-
   fetch() {
     var that = this
     var notice = this.consumer.last
-    var node = this.lastNode()
+    var node = this.discover.lastNode()
     if (notice && node) {
       request('http://'+node.address+':'+notice.data.httpPort)
         .send()

@@ -5,7 +5,6 @@ import Menu from 'menu'
 import Tray from 'tray'
 import clipboard from 'clipboard'
 import globalShortcut from 'global-shortcut'
-import Discover from 'node-discover'
 import fs from 'fs'
 import dialog from 'dialog'
 import path from 'path'
@@ -19,6 +18,7 @@ import FilePayload from './src/file_payload'
 import Client from './src/client'
 import NativeImage from 'native-image'
 import Stack from './src/stack'
+import Discovery from './src/discovery'
 
 var iconSet = {
   'ready': NativeImage.createFromPath(__dirname + '/resources/icon.png'),
@@ -28,18 +28,8 @@ var iconSet = {
 }
 var iconResolver = new IconResolver()
 
-var d = Discover()
-
 var appIcon = null
 var httpPort = null
-
-var publisher = new Stack()
-publisher.on('update', () => {
-  var success = d.send('clipboard', {
-    httpPort: httpPort,
-    payload: publisher.last.serialize()
-  })
-})
 
 var consumer = new Stack()
 consumer.on('update', () => {
@@ -47,7 +37,17 @@ consumer.on('update', () => {
   appIcon.setImage(iconSet[iconName])
 })
 
-var client = new Client(d, consumer)
+const discovery = new Discovery(consumer)
+
+var publisher = new Stack()
+publisher.on('update', () => {
+  var success = discovery.announce({
+    httpPort: httpPort,
+    payload: publisher.last.serialize()
+  })
+})
+
+var client = new Client(discovery, consumer)
 client.on('fetch', () => {
   appIcon.setImage(iconSet.ready)
 })
@@ -61,13 +61,6 @@ client.on('fetchFile', (mimeType, path, dataBytes) => {
     if (destinationPath) {
       fs.writeFileSync(destinationPath, dataBytes)
     }
-  })
-})
-
-d.join("clipboard", (data, obj) => {
-  consumer.push({
-    data: data,
-    obj: obj
   })
 })
 
