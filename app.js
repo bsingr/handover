@@ -6,7 +6,6 @@ import mime from 'mime'
 import http from 'http'
 import IconResolver from './src/icon_resolver'
 import buildWebApp from './src/build_web_app'
-import EventEmitter from 'events'
 import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
 import Client from './src/client'
@@ -35,10 +34,12 @@ const discovery = new Discovery()
 discovery.on('receive', notice => consumer.push(notice))
 
 const publisher = new Stack()
-publisher.on('update', () => discovery.send({
-  httpPort: httpPort,
-  payload: publisher.last.serialize()
-}))
+publisher.on('update', () => {
+  discovery.send({
+    httpPort: httpPort,
+    payload: publisher.last.serialize()
+  })
+})
 
 const client = new Client()
 client.on('fetch', () => appIcon.setImage(iconSet.ready))
@@ -46,7 +47,7 @@ client.on('fetchText', text => clipboard.writeText(text))
 client.on('fetchFile', (mimeType, path, dataBytes) => {
   dialog.showSaveDialog({
     title: 'Choose location to store the .' + mime.extension(mimeType) + ' file'
-  }, (destinationPath) => {
+  }, destinationPath => {
     if (destinationPath) {
       fs.writeFileSync(destinationPath, dataBytes)
     }
