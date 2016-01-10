@@ -2,7 +2,6 @@
 
 import {app, Tray, globalShortcut, dialog, clipboard} from 'electron'
 import fs from 'fs'
-import path from 'path'
 import mime from 'mime'
 import http from 'http'
 import IconResolver from './src/icon_resolver'
