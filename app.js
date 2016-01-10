@@ -14,35 +14,35 @@ import NativeImage from 'native-image'
 import Stack from './src/stack'
 import Discovery from './src/discovery'
 
-var iconSet = {
+const iconSet = {
   'ready': NativeImage.createFromPath(__dirname + '/resources/icon.png'),
   'dropAny': NativeImage.createFromPath(__dirname + '/resources/icon-drop-any.png'),
   'dropImage': NativeImage.createFromPath(__dirname + '/resources/icon-drop-image.png'),
   'dropText': NativeImage.createFromPath(__dirname + '/resources/icon-drop-text.png')
 }
-var iconResolver = new IconResolver()
 
-var appIcon = null
-var httpPort = null
+let appIcon = null
+let httpPort = null
 
-var consumer = new Stack()
+const consumer = new Stack()
 consumer.on('update', () => {
-  var iconName = iconResolver.dropIconName(consumer.last.data.payload.mime)
+  const iconResolver = new IconResolver()
+  const iconName = iconResolver.dropIconName(consumer.last.data.payload.mime)
   appIcon.setImage(iconSet[iconName])
 })
 
 const discovery = new Discovery()
 discovery.on('receive', notice => consumer.push(notice))
 
-var publisher = new Stack()
+const publisher = new Stack()
 publisher.on('update', () => {
-  var success = discovery.send({
+  const success = discovery.send({
     httpPort: httpPort,
     payload: publisher.last.serialize()
   })
 })
 
-var client = new Client()
+const client = new Client()
 client.on('fetch', () => appIcon.setImage(iconSet.ready))
 client.on('fetchText', text => clipboard.writeText(text))
 client.on('fetchFile', (mimeType, path, dataBytes) => {
@@ -71,11 +71,9 @@ app.on('ready', () => {
   })
 })
 
-app.on('will-quit', () => {
-  globalShortcut.unregisterAll()
-})
+app.on('will-quit', () => globalShortcut.unregisterAll())
 
-var httpServer = http.createServer(buildWebApp(publisher).callback())
+const httpServer = http.createServer(buildWebApp(publisher).callback())
 httpServer.listen(0) // random
 httpServer.on('listening', () => {
   httpPort = httpServer.address().port
