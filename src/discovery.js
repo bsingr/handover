@@ -6,16 +6,18 @@ export default class Discovery {
   constructor(consumer) {
     this.d = Discover();
     this.consumer = consumer;
-    this.d.join(CHANNEL, (data, obj) => {
-      consumer.push({
-        data: data,
-        obj: obj
-      })
-    });
+    this.d.join(CHANNEL, this.handleReceive.bind(this));
   }
 
-  announce(data) {
+  send(data) {
     this.d.send(CHANNEL, data);
+  }
+
+  handleReceive(data, obj) {
+    this.consumer.push({
+      data: data,
+      obj: obj
+    })
   }
 
   lastNode() {

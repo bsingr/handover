@@ -41,7 +41,7 @@ const discovery = new Discovery(consumer)
 
 var publisher = new Stack()
 publisher.on('update', () => {
-  var success = discovery.announce({
+  var success = discovery.send({
     httpPort: httpPort,
     payload: publisher.last.serialize()
   })
