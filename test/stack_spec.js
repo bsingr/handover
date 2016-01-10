@@ -4,20 +4,20 @@ import assert from 'assert'
 import Stack from '../src/stack'
 
 describe('Stack', () => {
-  let stack
+  let subject
 
-  beforeEach(() => stack = new Stack())
+  beforeEach(() => subject = new Stack())
 
   describe('#last', () => {
     it('returns undefined', () => {
-      assert.equal(undefined, stack.last)
+      assert.equal(undefined, subject.last)
     })
   })
 
   describe('#push + #last', () => {
     it('returns data after push', () => {
-      stack.push('foo')
-      assert.equal('foo', stack.last)
+      subject.push('foo')
+      assert.equal('foo', subject.last)
     })
   })
 })
