@@ -1,7 +1,6 @@
 'use babel'
 
 import app from 'app'
-import Menu from 'menu'
 import Tray from 'tray'
 import clipboard from 'clipboard'
 import globalShortcut from 'global-shortcut'
