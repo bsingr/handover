@@ -38,6 +38,7 @@ consumer.on('update', () => {
 })
 
 const discovery = new Discovery(consumer)
+discovery.on('receive', notice => consumer.push(notice))
 
 var publisher = new Stack()
 publisher.on('update', () => {

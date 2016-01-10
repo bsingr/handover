@@ -1,11 +1,12 @@
 import Discover from 'node-discover'
+import EventEmitter from 'events'
 
 const CHANNEL = 'clipboard'
 
-export default class Discovery {
-  constructor(consumer) {
-    this.d = Discover();
-    this.consumer = consumer;
+export default class Discovery extends EventEmitter {
+  constructor() {
+    super()
+    this.d = Discover()
     this.d.join(CHANNEL, this.handleReceive.bind(this));
   }
 
@@ -14,7 +15,7 @@ export default class Discovery {
   }
 
   handleReceive(data, obj) {
-    this.consumer.push({
+    this.emit('receive', {
       address: this.findNodeById(obj.iid).address,
       data: data,
       obj: obj
