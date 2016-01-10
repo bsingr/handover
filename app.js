@@ -49,12 +49,8 @@ publisher.on('update', () => {
 })
 
 var client = new Client()
-client.on('fetch', () => {
-  appIcon.setImage(iconSet.ready)
-})
-client.on('fetchText', (text) => {
-  clipboard.writeText(text)
-})
+client.on('fetch', () => appIcon.setImage(iconSet.ready))
+client.on('fetchText', text => clipboard.writeText(text))
 client.on('fetchFile', (mimeType, path, dataBytes) => {
   dialog.showSaveDialog({
     title: 'Choose location to store the .' + mime.extension(mimeType) + ' file'
@@ -81,13 +77,13 @@ app.on('ready', () => {
   })
 })
 
-app.on('will-quit', () =>  {
+app.on('will-quit', () => {
   globalShortcut.unregisterAll()
 })
 
 var httpServer = http.createServer(buildWebApp(publisher).callback())
 httpServer.listen(0) // random
-httpServer.on('listening', () =>  {
+httpServer.on('listening', () => {
   httpPort = httpServer.address().port
   console.log('listening http://127.0.0.1:'+httpPort)
 })
