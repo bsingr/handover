@@ -47,7 +47,7 @@ publisher.on('update', () => {
   })
 })
 
-var client = new Client(consumer)
+var client = new Client()
 client.on('fetch', () => {
   appIcon.setImage(iconSet.ready)
 })
@@ -76,7 +76,7 @@ app.on('ready', () => {
     publisher.push(new TextPayload(clipboard.readText()))
   })
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
-    client.fetch()
+    client.fetch(consumer.last)
   })
 })
 
