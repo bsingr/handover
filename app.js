@@ -1,6 +1,6 @@
 'use babel'
 
-import electron from 'electron'
+import {app, Tray, globalShortcut, dialog, clipboard} from 'electron'
 import fs from 'fs'
 import path from 'path'
 import mime from 'mime'
@@ -14,8 +14,6 @@ import Client from './src/client'
 import NativeImage from 'native-image'
 import Stack from './src/stack'
 import Discovery from './src/discovery'
-
-const {app, Tray, globalShortcut, dialog, clipboard} = electron;
 
 var iconSet = {
   'ready': NativeImage.createFromPath(__dirname + '/resources/icon.png'),
