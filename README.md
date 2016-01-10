@@ -1,5 +1,7 @@
 # Handover
 
+![https://travis-ci.org/bsingr/handover.svg](https://travis-ci.org/bsingr/handover.svg)
+
 Built with electron
 
 ## CONCEPT
