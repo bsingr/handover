@@ -15,16 +15,10 @@ export default class Discovery {
 
   handleReceive(data, obj) {
     this.consumer.push({
+      address: this.findNodeById(obj.iid).address,
       data: data,
       obj: obj
     })
-  }
-
-  lastNode() {
-    var last = this.consumer.last
-    if (last) {
-      return this.findNodeById(last.obj.iid)
-    }
   }
 
   findNodeById(id) {

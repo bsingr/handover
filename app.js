@@ -47,7 +47,7 @@ publisher.on('update', () => {
   })
 })
 
-var client = new Client(discovery, consumer)
+var client = new Client(consumer)
 client.on('fetch', () => {
   appIcon.setImage(iconSet.ready)
 })

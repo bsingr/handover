@@ -4,18 +4,16 @@ import request from 'superagent'
 import EventEmitter from 'events'
 
 export default class Client extends EventEmitter {
-  constructor(discover, consumer) {
+  constructor(consumer) {
     super()
-    this.discover = discover
     this.consumer = consumer
   }
 
   fetch() {
     var that = this
     var notice = this.consumer.last
-    var node = this.discover.lastNode()
-    if (notice && node) {
-      request('http://'+node.address+':'+notice.data.httpPort)
+    if (notice) {
+      request('http://'+notice.address+':'+notice.data.httpPort)
         .send()
         .end((err, res) => {
           if (err) {
