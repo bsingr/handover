@@ -31,7 +31,7 @@ consumer.on('update', () => {
   appIcon.setImage(iconSet[iconName])
 })
 
-const discovery = new Discovery(consumer)
+const discovery = new Discovery()
 discovery.on('receive', notice => consumer.push(notice))
 
 var publisher = new Stack()
