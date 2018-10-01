@@ -9,7 +9,7 @@ export default class FilePayload {
   }
 
   mime() {
-    return mime.lookup(this.path)
+    return mime.getType(this.path)
   }
 
   data() {
