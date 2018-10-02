@@ -1,6 +1,6 @@
 'use babel'
 
-import {app, Tray, globalShortcut, dialog, clipboard} from 'electron'
+import {app, Tray, globalShortcut, dialog, clipboard, nativeImage} from 'electron'
 import fs from 'fs'
 import mime from 'mime'
 import http from 'http'
@@ -9,15 +9,15 @@ import buildWebApp from './src/build_web_app'
 import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
 import Client from './src/client'
-import NativeImage from 'native-image'
+//import NativeImage from 'native-image'
 import Stack from './src/stack'
 import Discovery from './src/discovery'
 
 const iconSet = {
-  'ready': NativeImage.createFromPath(__dirname + '/resources/icon.png'),
-  'dropAny': NativeImage.createFromPath(__dirname + '/resources/icon-drop-any.png'),
-  'dropImage': NativeImage.createFromPath(__dirname + '/resources/icon-drop-image.png'),
-  'dropText': NativeImage.createFromPath(__dirname + '/resources/icon-drop-text.png')
+  'ready': nativeImage.createFromPath(__dirname + '/resources/icon.png'),
+  'dropAny': nativeImage.createFromPath(__dirname + '/resources/icon-drop-any.png'),
+  'dropImage': nativeImage.createFromPath(__dirname + '/resources/icon-drop-image.png'),
+  'dropText': nativeImage.createFromPath(__dirname + '/resources/icon-drop-text.png')
 }
 
 let appIcon = null
@@ -46,7 +46,7 @@ client.on('fetch', () => appIcon.setImage(iconSet.ready))
 client.on('fetchText', text => clipboard.writeText(text))
 client.on('fetchFile', (mimeType, path, dataBytes) => {
   dialog.showSaveDialog({
-    title: 'Choose location to store the .' + mime.extension(mimeType) + ' file'
+    title: 'Choose location to store the .' + mime.getExtension(mimeType) + ' file'
   }, destinationPath => {
     if (destinationPath) {
       fs.writeFileSync(destinationPath, dataBytes)
@@ -66,15 +66,18 @@ app.on('ready', () => {
     publisher.push(new TextPayload(clipboard.readText()))
   })
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
-    client.fetch(consumer.last)
+    if (consumer.last) {
+      client.fetch(consumer.last)
+    }
   })
 })
 
 app.on('will-quit', () => globalShortcut.unregisterAll())
 
 const httpServer = http.createServer(buildWebApp(publisher).callback())
-httpServer.listen(0) // random
 httpServer.on('listening', () => {
   httpPort = httpServer.address().port
   console.log('listening http://127.0.0.1:'+httpPort)
 })
+httpServer.listen(0) // random
+
