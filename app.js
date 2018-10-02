@@ -61,6 +61,9 @@ app.on('ready', () => {
   appIcon.on('drop-files', (e, paths) => {
     publisher.push(new FilePayload(paths[0]))
   })
+  appIcon.on('drop-text', (e, text) => {
+    publisher.push(new TextPayload(text))
+  })
   globalShortcut.register('CmdOrCtrl+shift+c', () => {
     publisher.push(new TextPayload(clipboard.readText()))
   })
