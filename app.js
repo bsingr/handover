@@ -9,7 +9,6 @@ import buildWebApp from './src/build_web_app'
 import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
 import Client from './src/client'
-//import NativeImage from 'native-image'
 import Stack from './src/stack'
 import Discovery from './src/discovery'
 
@@ -68,6 +67,8 @@ app.on('ready', () => {
   globalShortcut.register('CmdOrCtrl+shift+v', () => {
     if (consumer.last) {
       client.fetch(consumer.last)
+    } else {
+      dialog.showErrorBox('Handover', 'There is nothing handed over to you ...')
     }
   })
 })
