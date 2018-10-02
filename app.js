@@ -1,6 +1,6 @@
 'use babel'
 
-import {app, Tray, globalShortcut, dialog, clipboard, nativeImage} from 'electron'
+import {app, Menu, Tray, globalShortcut, dialog, clipboard, nativeImage} from 'electron'
 import fs from 'fs'
 import mime from 'mime'
 import http from 'http'
@@ -58,6 +58,10 @@ app.dock ? app.dock.hide() : false // disable dock icon on OS X
 app.on('ready', () => {
   appIcon = new Tray(iconSet.ready)
   appIcon.setToolTip('Handover')
+  const contextMenu = Menu.buildFromTemplate([
+    {role: 'quit'},
+  ])
+  appIcon.setContextMenu(contextMenu)
   appIcon.on('drop-files', (e, paths) => {
     publisher.push(new FilePayload(paths[0]))
   })
