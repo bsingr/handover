@@ -1,6 +1,6 @@
 'use babel'
 
-import {app, Tray, globalShortcut, dialog, clipboard, nativeImage} from 'electron'
+import {app, Tray, dialog, clipboard, nativeImage} from 'electron'
 import fs from 'fs'
 import mime from 'mime'
 import http from 'http'
@@ -9,9 +9,10 @@ import buildWebApp from './src/build_web_app'
 import TextPayload from './src/text_payload'
 import FilePayload from './src/file_payload'
 import Client from './src/client'
-//import NativeImage from 'native-image'
 import Stack from './src/stack'
 import Discovery from './src/discovery'
+import createContextMenu from './src/app/context_menu'
+import {handleCopy, handlePaste} from './src/util'
 
 const iconSet = {
   'ready': nativeImage.createFromPath(__dirname + '/resources/icon.png'),
@@ -59,20 +60,15 @@ app.dock ? app.dock.hide() : false // disable dock icon on OS X
 app.on('ready', () => {
   appIcon = new Tray(iconSet.ready)
   appIcon.setToolTip('Handover')
+  const contextMenu = createContextMenu(publisher, client, consumer)
+  appIcon.setContextMenu(contextMenu)
   appIcon.on('drop-files', (e, paths) => {
     publisher.push(new FilePayload(paths[0]))
   })
-  globalShortcut.register('CmdOrCtrl+shift+c', () => {
-    publisher.push(new TextPayload(clipboard.readText()))
-  })
-  globalShortcut.register('CmdOrCtrl+shift+v', () => {
-    if (consumer.last) {
-      client.fetch(consumer.last)
-    }
+  appIcon.on('drop-text', (e, text) => {
+    publisher.push(new TextPayload(text))
   })
 })
-
-app.on('will-quit', () => globalShortcut.unregisterAll())
 
 const httpServer = http.createServer(buildWebApp(publisher).callback())
 httpServer.on('listening', () => {

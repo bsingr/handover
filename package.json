@@ -1,7 +1,7 @@
 {
   "name": "handover",
   "version": "1.0.0",
-  "description": "",
+  "description": "Fast and simple way to share your clipboard and files.",
   "main": "bootstrap.js",
   "scripts": {
     "test": "mocha",
