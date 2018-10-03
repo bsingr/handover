@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<svg width="22" height="22" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+ <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+ <g class="layer">
+  <title>Layer 1</title>
+  <circle cx="5.566566" cy="4.811146" fill="#ffffff" id="svg_6" r="2.972137" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null"/>
+  <circle cx="9.424148" cy="17.442725" fill="#ffffff" id="svg_10" r="2.972137" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null"/>
+  <circle cx="17.411764" cy="5.925696" fill="#ffffff" id="svg_11" r="2.972137" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null"/>
+  <line fill="none" id="svg_17" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" transform="rotate(-56.0564 9.54799 8.71207)" x1="9.145511" x2="9.950464" y1="10.662539" y2="6.76161"/>
+  <line fill="none" id="svg_15" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" transform="rotate(-2.53355 10.3963 11.9319)" x1="9.99381" x2="10.798763" y1="13.882354" y2="9.981425"/>
+  <line fill="none" id="svg_18" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" transform="rotate(46.9903 12.644 8.83591)" x1="12.241485" x2="13.046438" y1="10.786375" y2="6.885446"/>
+ </g>
+</svg>
