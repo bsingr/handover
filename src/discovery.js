@@ -1,7 +1,7 @@
 import Discover from 'node-discover'
 import EventEmitter from 'events'
 
-const CHANNEL = 'clipboard'
+const CHANNEL = 'handover'
 
 export default class Discovery extends EventEmitter {
   constructor() {
