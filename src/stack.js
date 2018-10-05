@@ -5,4 +5,9 @@ export default class Stack extends EventEmitter  {
     this.last = item
     this.emit('update')
   }
+
+  clear() {
+    this.last = null
+    this.emit('update')
+  }
 }

@@ -6,6 +6,11 @@ import FilePayload from '../file_payload'
 export default function createContextMenu(publisher, client, consumer) {
   const menu = new Menu()
   menu.append(new MenuItem({
+    label: 'Clear shared item',
+    accelerator: 'CmdOrCtrl+shift+c',
+    click: () => publisher.clear()
+  }))
+  menu.append(new MenuItem({
     label: 'Share clipboard with others',
     accelerator: 'CmdOrCtrl+shift+c',
     click: () => handleCopy(publisher)
