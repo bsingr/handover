@@ -4,8 +4,8 @@
   "description": "Fast and simple way to share your clipboard and files.",
   "main": "bootstrap.js",
   "scripts": {
-    "test": "mocha",
-    "start": "electron ."
+    "test": "npx mocha",
+    "start": "npx electron ."
   },
   "devDependencies": {
     "electron-packager": "^12.1.2",
