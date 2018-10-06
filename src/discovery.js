@@ -1,12 +1,12 @@
-import Discover from 'node-discover'
-import EventEmitter from 'events'
+import Discover from 'node-discover';
+import EventEmitter from 'events';
 
-const CHANNEL = 'handover'
+const CHANNEL = 'handover';
 
 export default class Discovery extends EventEmitter {
   constructor() {
-    super()
-    this.d = Discover()
+    super();
+    this.d = Discover();
     this.d.join(CHANNEL, this.handleReceive.bind(this));
   }
 
@@ -19,16 +19,16 @@ export default class Discovery extends EventEmitter {
       address: this.findNodeById(obj.iid).address,
       data: data,
       obj: obj
-    })
+    });
   }
 
   findNodeById(id) {
     var node;
     this.d.eachNode((n) => {
       if (n.id === id) {
-        node = n
+        node = n;
       }
-    })
-    return node
+    });
+    return node;
   }
 }

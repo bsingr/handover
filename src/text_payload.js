@@ -1,14 +1,14 @@
 export default class TextPayload {
   constructor(text) {
-    this.text = text
+    this.text = text;
   }
 
   mime() {
-    return 'text/plain'
+    return 'text/plain';
   }
 
   data() {
-    return this.text
+    return this.text;
   }
 
   serialize() {
@@ -16,6 +16,6 @@ export default class TextPayload {
       type: 'TextPayload',
       mime: this.mime(),
       text: this.text
-    }
+    };
   }
 }

@@ -1,17 +1,17 @@
-import mime from 'mime'
-import fs from 'fs'
+import mime from 'mime';
+import fs from 'fs';
 
 export default class FilePayload {
   constructor(path) {
-    this.path = path
+    this.path = path;
   }
 
   mime() {
-    return mime.getType(this.path)
+    return mime.getType(this.path);
   }
 
   data() {
-    return fs.createReadStream(this.path)
+    return fs.createReadStream(this.path);
   }
 
   serialize() {
@@ -19,6 +19,6 @@ export default class FilePayload {
       type: 'FilePayload',
       mime: this.mime(),
       path: this.path
-    }
+    };
   }
 }

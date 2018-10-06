@@ -2,11 +2,11 @@ export default class IconResolver {
   dropIconName(mime) {
     if (mime) {
       if (mime.match(/text/)) {
-        return 'dropText'
+        return 'dropText';
       } else if (mime.match(/image/)) {
-        return 'dropImage'
+        return 'dropImage';
       }
     }
-    return 'dropAny'
+    return 'dropAny';
   }
 }
