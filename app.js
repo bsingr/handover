@@ -1,4 +1,4 @@
-'use babel'
+
 
 import {app, Tray, dialog, clipboard, nativeImage} from 'electron'
 import fs from 'fs'

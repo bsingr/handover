@@ -1,5 +1,3 @@
-'use babel'
-
 import assert from 'assert'
 import Stack from '../src/stack'
 

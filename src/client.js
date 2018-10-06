@@ -1,5 +1,3 @@
-'use babel'
-
 import request from 'superagent'
 import EventEmitter from 'events'
 

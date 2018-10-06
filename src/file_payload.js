@@ -1,5 +1,3 @@
-'use babel'
-
 import mime from 'mime'
 import fs from 'fs'
 

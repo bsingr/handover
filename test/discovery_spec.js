@@ -1,5 +1,3 @@
-'use babel'
-
 import assert from 'assert'
 import Discovery from '../src/discovery'
 

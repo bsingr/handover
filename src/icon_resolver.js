@@ -1,5 +1,3 @@
-'use babel'
-
 export default class IconResolver {
   dropIconName(mime) {
     if (mime) {

@@ -1,5 +1,3 @@
-'use babel'
-
 export default class TextPayload {
   constructor(text) {
     this.text = text
