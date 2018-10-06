@@ -1,6 +1,6 @@
 # Handover
 
-![https://travis-ci.org/bsingr/handover.svg](https://travis-ci.org/bsingr/handover.svg)
+[![Build Status](https://travis-ci.org/bsingr/handover.png?branch=master)](https://travis-ci.org/bsingr/handover)
 
 Built with electron
 
