@@ -26,8 +26,11 @@ let httpPort = null
 
 const consumer = new Stack()
 consumer.on('update', () => {
-  const iconResolver = new IconResolver()
-  const iconName = iconResolver.dropIconName(consumer.last.data.payload.mime)
+  let iconName = 'ready'
+  if (consumer.last.data.payload) {
+    const iconResolver = new IconResolver()
+    iconName = iconResolver.dropIconName(consumer.last.data.payload.mime)
+  }
   appIcon.setImage(iconSet[iconName])
 })
 
@@ -36,10 +39,17 @@ discovery.on('receive', notice => consumer.push(notice))
 
 const publisher = new Stack()
 publisher.on('update', () => {
-  discovery.send({
-    httpPort: httpPort,
-    payload: publisher.last.serialize()
-  })
+  if (publisher.last) {
+    discovery.send({
+      httpPort: httpPort,
+      payload: publisher.last.serialize()
+    })
+  } else {
+    discovery.send({
+      httpPort: httpPort,
+      payload: null
+    })
+  }
 })
 
 const client = new Client()
