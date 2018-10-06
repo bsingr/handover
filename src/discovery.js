@@ -12,7 +12,7 @@ export default class Discovery extends EventEmitter {
 
   stop() {
     this.d.leave(CHANNEL);
-    this.d.stop()
+    this.d.stop();
   }
 
   send(data) {

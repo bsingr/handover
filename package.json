@@ -5,7 +5,8 @@
   "main": "bootstrap.js",
   "scripts": {
     "test": "npx mocha",
-    "start": "npx electron ."
+    "start": "npx electron .",
+    "lint": "npx eslint --fix ."
   },
   "devDependencies": {
     "electron-packager": "^12.1.2",

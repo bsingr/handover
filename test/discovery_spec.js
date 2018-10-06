@@ -5,7 +5,7 @@ describe('Discover', () => {
   let subject;
 
   beforeEach(() => subject = new Discovery());
-  afterEach(() => subject.stop())
+  afterEach(() => subject.stop());
 
   describe('#findNodeById', () => {
     it('returns undefined', () => {
