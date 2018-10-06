@@ -10,6 +10,11 @@ export default class Discovery extends EventEmitter {
     this.d.join(CHANNEL, this.handleReceive.bind(this));
   }
 
+  stop() {
+    this.d.leave(CHANNEL);
+    this.d.stop()
+  }
+
   send(data) {
     this.d.send(CHANNEL, data);
   }

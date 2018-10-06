@@ -5,10 +5,10 @@ describe('Discover', () => {
   let subject;
 
   beforeEach(() => subject = new Discovery());
+  afterEach(() => subject.stop())
 
   describe('#findNodeById', () => {
-    // disabled because Discovery does not implement proper shutdown yet
-    xit('returns undefined', () => {
+    it('returns undefined', () => {
       assert.equal(undefined, subject.findNodeById('foo'));
     });
   });
