@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import {app, Tray, dialog, clipboard, BrowserWindow, WebContents} from 'electron';
+import {app, Tray, dialog, clipboard, BrowserWindow} from 'electron';
 import fs from 'fs';
 import mime from 'mime';
 import http from 'http';
@@ -14,6 +14,7 @@ import createContextMenu from './src/createContextMenu';
 import iconSet from './src/iconSet';
 import shortcuts from './src/shortcuts';
 
+let mainWindow = null;
 let appIcon = null;
 let httpPort = null;
 
@@ -62,11 +63,11 @@ sharingClient.on('fetchFile', (mimeType, path, dataBytes) => {
 app.dock ? app.dock.hide() : false; // disable dock icon on OS X
 
 app.on('ready', () => {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     transparent: true,
     frame: false
-  })
-  mainWindow.setIgnoreMouseEvents(true)
+  });
+  mainWindow.setIgnoreMouseEvents(true);
 
   shortcuts.registerGlobal({
     mainWindow,
@@ -87,8 +88,8 @@ app.on('ready', () => {
 });
 
 app.on('will-quit', () => {
-  mainWindow.close()
-  shortcuts.unregisterGlobal()
+  mainWindow.close();
+  shortcuts.unregisterGlobal();
 });
 
 const sharingHttpServer = http.createServer(buildSharingServer(sharingPublisherStack).callback());

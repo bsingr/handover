@@ -3,5 +3,5 @@ const keys = {
   copyAction: 'CmdOrCtrl+shift+c',
   shareFileDialogAction: 'CmdOrCtrl+shift+u',
   pasteAction: 'CmdOrCtrl+shift+v'
-}
+};
 export default keys;

@@ -16,10 +16,10 @@ function registerGlobal({
 }
 
 function unregisterGlobal() {
-  globalShortcut.unregisterAll()
+  globalShortcut.unregisterAll();
 }
 
 export default {
   registerGlobal,
   unregisterGlobal
-} 
+}; 
