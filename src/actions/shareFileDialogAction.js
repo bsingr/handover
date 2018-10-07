@@ -1,7 +1,7 @@
 import {dialog} from 'electron';
 import FilePayload from '../payloads/FilePayload';
 
-export default function shareFileDialogAction(publisher) {
+export default function(publisher) {
   dialog.showOpenDialog(
     {
       buttonLabel: 'Share'

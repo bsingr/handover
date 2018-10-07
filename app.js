@@ -12,6 +12,7 @@ import Stack from './src/Stack';
 import Discovery from './src/Discovery';
 import createContextMenu from './src/createContextMenu';
 import iconSet from './src/iconSet';
+import shortcuts from './src/shortcuts';
 
 let appIcon = null;
 let httpPort = null;
@@ -61,16 +62,25 @@ sharingClient.on('fetchFile', (mimeType, path, dataBytes) => {
 app.dock ? app.dock.hide() : false; // disable dock icon on OS X
 
 app.on('ready', () => {
+  shortcuts.registerGlobal({
+    sharingPublisherStack,
+    sharingClient,
+    sharingConsumerStack,
+  });
+
   appIcon = new Tray(iconSet.ready);
   appIcon.setToolTip('Handover');
-  const contextMenu = createContextMenu(sharingPublisherStack, sharingClient, sharingConsumerStack);
-  appIcon.setContextMenu(contextMenu);
+  appIcon.setContextMenu(createContextMenu(sharingPublisherStack, sharingClient, sharingConsumerStack));
   appIcon.on('drop-files', (e, paths) => {
     sharingPublisherStack.push(new FilePayload(paths[0]));
   });
   appIcon.on('drop-text', (e, text) => {
     sharingPublisherStack.push(new TextPayload(text));
   });
+});
+
+app.on('will-quit', () => {
+  shortcuts.unregisterGlobal()
 });
 
 const sharingHttpServer = http.createServer(buildSharingServer(sharingPublisherStack).callback());

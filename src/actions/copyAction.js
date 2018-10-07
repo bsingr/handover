@@ -1,7 +1,7 @@
 import {dialog, clipboard} from 'electron';
 import TextPayload from '../payloads/TextPayload';
 
-export default function copyAction(publisher) {
+export default function(publisher) {
   const clipboardText = clipboard.readText();
   if (clipboardText) {
     publisher.push(new TextPayload(clipboard.readText()));

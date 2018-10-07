@@ -1,38 +1,34 @@
-import {app, Menu, MenuItem, globalShortcut} from 'electron';
+import {Menu, MenuItem} from 'electron';
+import clearSharedItemAction from './actions/clearSharedItemAction';
 import copyAction from './actions/copyAction';
 import pasteAction from './actions/pasteAction';
 import shareFileDialogAction from './actions/shareFileDialogAction';
+import shortcutKeys from './shortcutKeys';
 
 export default function createContextMenu(publisher, client, consumer) {
   const menu = new Menu();
   menu.append(new MenuItem({
     label: 'Clear shared item',
-    accelerator: 'CmdOrCtrl+shift+c',
-    click: () => publisher.clear()
+    accelerator: shortcutKeys.clearSharedItemAction,
+    click: () => clearSharedItemAction(publisher)
   }));
   menu.append(new MenuItem({
     label: 'Share clipboard with others',
-    accelerator: 'CmdOrCtrl+shift+c',
+    accelerator: shortcutKeys.copyAction,
     click: () => copyAction(publisher)
   }));
   menu.append(new MenuItem({
     label: 'Share file with others',
-    accelerator: 'CmdOrCtrl+shift+u',
+    accelerator: shortcutKeys.shareFileDialogAction,
     click: () => shareFileDialogAction(publisher)
   }));
   menu.append(new MenuItem({
     label: 'Paste from handover',
-    accelerator: 'CmdOrCtrl+shift+v',
+    accelerator: shortcutKeys.pasteAction,
     click: () => pasteAction(client, consumer)
   }));
   menu.append(new MenuItem({type: 'separator'}));
   menu.append(new MenuItem({role: 'quit'}));
-
-  globalShortcut.register('CmdOrCtrl+shift+c', () => copyAction(publisher));
-  globalShortcut.register('CmdOrCtrl+shift+u', () => shareFileDialogAction(publisher));
-  globalShortcut.register('CmdOrCtrl+shift+v', () => pasteAction(client, consumer));
-  app.on('will-quit', () => globalShortcut.unregisterAll());
-
   return menu;
 }
 

@@ -1,6 +1,6 @@
 import {dialog} from 'electron';
 
-export default function pasteAction(client, consumer) {
+export default function(client, consumer) {
   if (consumer.last) {
     client.fetch(consumer.last);
   } else {
