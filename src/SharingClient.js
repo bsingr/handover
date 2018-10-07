@@ -1,7 +1,7 @@
 import request from 'superagent';
 import EventEmitter from 'events';
 
-export default class Client extends EventEmitter {
+export default class SharingClient extends EventEmitter {
   fetch(notice) {
     request('http://'+notice.address+':'+notice.data.httpPort)
       .send()
