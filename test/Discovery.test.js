@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Discovery from '../src/discovery';
+import Discovery from '../src/Discovery';
 
 describe('Discover', () => {
   let subject;

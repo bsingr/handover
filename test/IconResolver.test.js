@@ -1,5 +1,5 @@
 import assert from 'assert';
-import IconResolver from '../src/icon_resolver';
+import IconResolver from '../src/IconResolver';
 
 describe('IconResolver', () => {
   let subject;

@@ -1,5 +1,5 @@
 import assert from 'assert';
-import Stack from '../src/stack';
+import Stack from '../src/Stack';
 
 describe('Stack', () => {
   let subject;

@@ -3,14 +3,14 @@ import {app, Tray, dialog, clipboard, nativeImage} from 'electron';
 import fs from 'fs';
 import mime from 'mime';
 import http from 'http';
-import IconResolver from './src/icon_resolver';
-import buildWebApp from './src/build_web_app';
-import TextPayload from './src/text_payload';
-import FilePayload from './src/file_payload';
-import Client from './src/client';
-import Stack from './src/stack';
-import Discovery from './src/discovery';
-import createContextMenu from './src/context_menu';
+import IconResolver from './src/IconResolver';
+import buildWebApp from './src/buildWebApp';
+import TextPayload from './src/TextPayload';
+import FilePayload from './src/FilePayload';
+import Client from './src/Client';
+import Stack from './src/Stack';
+import Discovery from './src/Discovery';
+import createContextMenu from './src/createContextMenu';
 
 const iconSet = {
   'ready': nativeImage.createFromPath(__dirname + '/resources/icon.png'),
