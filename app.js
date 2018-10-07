@@ -10,7 +10,7 @@ import FilePayload from './src/file_payload';
 import Client from './src/client';
 import Stack from './src/stack';
 import Discovery from './src/discovery';
-import createContextMenu from './src/app/context_menu';
+import createContextMenu from './src/context_menu';
 
 const iconSet = {
   'ready': nativeImage.createFromPath(__dirname + '/resources/icon.png'),

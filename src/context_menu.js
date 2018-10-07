@@ -1,5 +1,5 @@
 import {app, Menu, MenuItem, globalShortcut} from 'electron';
-import {handleCopy, handlePaste, shareFile} from '../util';
+import {handleCopy, handlePaste, shareFile} from './util';
 
 export default function createContextMenu(publisher, client, consumer) {
   const menu = new Menu();
