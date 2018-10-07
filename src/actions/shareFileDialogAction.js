@@ -1,5 +1,5 @@
 import {dialog} from 'electron';
-import FilePayload from '../FilePayload';
+import FilePayload from '../payloads/FilePayload';
 
 export default function shareFileDialogAction(publisher) {
   dialog.showOpenDialog(
