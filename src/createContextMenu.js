@@ -5,7 +5,7 @@ import pasteAction from './actions/pasteAction';
 import shareFileDialogAction from './actions/shareFileDialogAction';
 import shortcutKeys from './shortcutKeys';
 
-export default function createContextMenu(publisher, client, consumer) {
+export default function createContextMenu(mainWindow,publisher, client, consumer) {
   const menu = new Menu();
   menu.append(new MenuItem({
     label: 'Clear shared item',
@@ -20,7 +20,7 @@ export default function createContextMenu(publisher, client, consumer) {
   menu.append(new MenuItem({
     label: 'Share file with others',
     accelerator: shortcutKeys.shareFileDialogAction,
-    click: () => shareFileDialogAction(publisher)
+    click: () => shareFileDialogAction(mainWindow, publisher)
   }));
   menu.append(new MenuItem({
     label: 'Paste from handover',

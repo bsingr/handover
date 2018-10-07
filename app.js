@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import {app, Tray, dialog, clipboard} from 'electron';
+import {app, Tray, dialog, clipboard, BrowserWindow, WebContents} from 'electron';
 import fs from 'fs';
 import mime from 'mime';
 import http from 'http';
@@ -62,7 +62,14 @@ sharingClient.on('fetchFile', (mimeType, path, dataBytes) => {
 app.dock ? app.dock.hide() : false; // disable dock icon on OS X
 
 app.on('ready', () => {
+  const mainWindow = new BrowserWindow({
+    transparent: true,
+    frame: false
+  })
+  mainWindow.setIgnoreMouseEvents(true)
+
   shortcuts.registerGlobal({
+    mainWindow,
     sharingPublisherStack,
     sharingClient,
     sharingConsumerStack,
@@ -70,7 +77,7 @@ app.on('ready', () => {
 
   appIcon = new Tray(iconSet.ready);
   appIcon.setToolTip('Handover');
-  appIcon.setContextMenu(createContextMenu(sharingPublisherStack, sharingClient, sharingConsumerStack));
+  appIcon.setContextMenu(createContextMenu(mainWindow, sharingPublisherStack, sharingClient, sharingConsumerStack));
   appIcon.on('drop-files', (e, paths) => {
     sharingPublisherStack.push(new FilePayload(paths[0]));
   });
@@ -80,6 +87,7 @@ app.on('ready', () => {
 });
 
 app.on('will-quit', () => {
+  mainWindow.close()
   shortcuts.unregisterGlobal()
 });
 
