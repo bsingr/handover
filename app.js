@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import {app, Tray, dialog, clipboard, nativeImage} from 'electron';
+import {app, Tray, dialog, clipboard} from 'electron';
 import fs from 'fs';
 import mime from 'mime';
 import http from 'http';
@@ -11,13 +11,7 @@ import SharingClient from './src/SharingClient';
 import Stack from './src/Stack';
 import Discovery from './src/Discovery';
 import createContextMenu from './src/createContextMenu';
-
-const iconSet = {
-  'ready': nativeImage.createFromPath(__dirname + '/resources/icon.png'),
-  'dropAny': nativeImage.createFromPath(__dirname + '/resources/icon-drop-any.png'),
-  'dropImage': nativeImage.createFromPath(__dirname + '/resources/icon-drop-image.png'),
-  'dropText': nativeImage.createFromPath(__dirname + '/resources/icon-drop-text.png')
-};
+import iconSet from './src/iconSet';
 
 let appIcon = null;
 let httpPort = null;
