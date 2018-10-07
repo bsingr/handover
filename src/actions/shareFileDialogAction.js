@@ -1,6 +1,5 @@
-import {BrowserWindow, dialog} from 'electron';
+import {dialog} from 'electron';
 import FilePayload from '../payloads/FilePayload';
-
 
 export default function(mainWindow, publisher) {
   mainWindow.show()
