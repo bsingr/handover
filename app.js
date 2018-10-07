@@ -16,25 +16,25 @@ import iconSet from './src/iconSet';
 let appIcon = null;
 let httpPort = null;
 
-const consumer = new Stack();
-consumer.on('update', () => {
+const sharingConsumerStack = new Stack();
+sharingConsumerStack.on('update', () => {
   let iconName = 'ready';
-  if (consumer.last.data.payload) {
+  if (sharingConsumerStack.last.data.payload) {
     const iconResolver = new IconResolver();
-    iconName = iconResolver.dropIconName(consumer.last.data.payload.mime);
+    iconName = iconResolver.dropIconName(sharingConsumerStack.last.data.payload.mime);
   }
   appIcon.setImage(iconSet[iconName]);
 });
 
 const discovery = new Discovery();
-discovery.on('receive', notice => consumer.push(notice));
+discovery.on('receive', notice => sharingConsumerStack.push(notice));
 
-const publisher = new Stack();
-publisher.on('update', () => {
-  if (publisher.last) {
+const sharingPublisherStack = new Stack();
+sharingPublisherStack.on('update', () => {
+  if (sharingPublisherStack.last) {
     discovery.send({
       httpPort: httpPort,
-      payload: publisher.last.serialize()
+      payload: sharingPublisherStack.last.serialize()
     });
   } else {
     discovery.send({
@@ -63,17 +63,17 @@ app.dock ? app.dock.hide() : false; // disable dock icon on OS X
 app.on('ready', () => {
   appIcon = new Tray(iconSet.ready);
   appIcon.setToolTip('Handover');
-  const contextMenu = createContextMenu(publisher, sharingClient, consumer);
+  const contextMenu = createContextMenu(sharingPublisherStack, sharingClient, sharingConsumerStack);
   appIcon.setContextMenu(contextMenu);
   appIcon.on('drop-files', (e, paths) => {
-    publisher.push(new FilePayload(paths[0]));
+    sharingPublisherStack.push(new FilePayload(paths[0]));
   });
   appIcon.on('drop-text', (e, text) => {
-    publisher.push(new TextPayload(text));
+    sharingPublisherStack.push(new TextPayload(text));
   });
 });
 
-const sharingHttpServer = http.createServer(buildSharingServer(publisher).callback());
+const sharingHttpServer = http.createServer(buildSharingServer(sharingPublisherStack).callback());
 sharingHttpServer.on('listening', () => {
   httpPort = sharingHttpServer.address().port;
   console.log('listening http://127.0.0.1:'+httpPort);
