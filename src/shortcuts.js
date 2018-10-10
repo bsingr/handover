@@ -22,4 +22,5 @@ function unregisterGlobal() {
 export default {
   registerGlobal,
   unregisterGlobal
-}; 
+};
+
