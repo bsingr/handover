@@ -24,3 +24,5 @@ Built with electron
 - Web UI
 - Improve icons incl. app starter icon
 - Stack history
+- Subscribe to different groups
+
