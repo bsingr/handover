@@ -1,22 +1,21 @@
 import Discover from 'node-discover';
 import EventEmitter from 'events';
 
-const CHANNEL = 'handover';
-
 export default class Discovery extends EventEmitter {
-  constructor() {
+  constructor(channel = 'handover') {
     super();
+    this.channel = channel;
     this.d = Discover();
-    this.d.join(CHANNEL, this.handleReceive.bind(this));
+    this.d.join(this.channel, this.handleReceive.bind(this));
   }
 
   stop() {
-    this.d.leave(CHANNEL);
+    this.d.leave(this.channel);
     this.d.stop();
   }
 
   send(data) {
-    this.d.send(CHANNEL, data);
+    this.d.send(this.channel, data);
   }
 
   handleReceive(data, obj) {

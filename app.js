@@ -28,7 +28,7 @@ sharingConsumerStack.on('update', () => {
   appIcon.setImage(iconSet[iconName]);
 });
 
-const discovery = new Discovery();
+const discovery = new Discovery('handover');
 discovery.on('receive', notice => sharingConsumerStack.push(notice));
 
 const sharingPublisherStack = new Stack();
